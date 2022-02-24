@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F5F8FB"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.ReservationTimeActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_nowtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_white_cal_time_item"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_nowtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="现在时间"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edt_nowtime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:theme="@style/TimeEditTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ck_now_time_auto"
+            app:layout_constraintStart_toEndOf="@+id/tv_nowtime"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/ck_now_time_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_time_cal_ck"
+            android:button="@null"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_ck_tip"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_ck_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自动更新"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/edt_nowtime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_targetTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white_cal_time_item"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/cl_nowtime"
+        app:layout_constraintStart_toStartOf="@+id/cl_nowtime"
+
+        app:layout_constraintTop_toBottomOf="@+id/cl_nowtime">
+
+
+        <TextView
+            android:id="@+id/tv_targetTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="目标时间"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edt_targetTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:theme="@style/TimeEditTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_targetTime"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_handleTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white_cal_time_item"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/cl_targetTime"
+        app:layout_constraintStart_toStartOf="@+id/cl_targetTime"
+        app:layout_constraintTop_toBottomOf="@+id/cl_targetTime">
+
+
+        <TextView
+            android:id="@+id/tv_handleTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="操作时间"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edt_handleTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:theme="@style/TimeEditTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_handle_timeunit"
+            app:layout_constraintStart_toEndOf="@+id/tv_handleTime"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_handle_timeunit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分钟"
+            android:textColor="@color/pass_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_cal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/bg_cal_time_btn"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="计算"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_timeresult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="@color/pass_text_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_cal"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package cn.newhit.timingcalculation;
+package cn.newhit.timingcalculation.constants;
 
 public class Constants {
     /************************MMKV代码******************************/

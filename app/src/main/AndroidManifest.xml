@@ -8,12 +8,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.TimingCalculation">
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".TimeMinuiteReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
-        <activity android:name=".activity.ReservationTimeActivity"
+        <activity
+            android:name=".activity.ReservationTimeActivity"
             android:theme="@style/PhonTitleTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

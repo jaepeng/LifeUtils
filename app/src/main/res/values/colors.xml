@@ -263,6 +263,7 @@
     <color name="color_929292">#929292</color>
     <color name="color_BCBFC6">#BCBFC6</color>
     <color name="color_toast_bg">#CC434343</color>
+    <color name="color_FAFAFA">#FAFAFA</color>
 
     <!--  TitleBar用到的颜色值  -->
     <color name="color_title_bar_title">#000000</color>

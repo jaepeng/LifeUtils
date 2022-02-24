@@ -1,6 +1,8 @@
 package cn.newhit.timingcalculation.activity;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,9 +32,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import cn.newhit.timingcalculation.Constants;
 import cn.newhit.timingcalculation.R;
 import cn.newhit.timingcalculation.TimeMinuiteReceiver;
+import cn.newhit.timingcalculation.constants.Constants;
 import cn.newhit.timingcalculation.utils.back.BackHandlerHelper;
 
 /**
@@ -70,10 +72,15 @@ public class ReservationTimeActivity extends AppCompatActivity {
     private int mSelectHour;
     private int mSelectMinute;
 
+    public static void startRevervationTimeActivity(Context context) {
+        Intent intent = new Intent(context, ReservationTimeActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reservation_time);
         mBind = ButterKnife.bind(this);
         MMKV.initialize(this);
         mHandler = new Handler(Looper.getMainLooper());
@@ -199,18 +206,18 @@ public class ReservationTimeActivity extends AppCompatActivity {
                         resultStr = millis2TimeSpan / 60 + ":00";
                     }
                 } else {
-                    String hourStr,minuStr="00";
-                    if (millis2TimeSpan/60<10){
-                        hourStr="0"+millis2TimeSpan/60;
-                    }else{
-                        hourStr=millis2TimeSpan/60+"";
+                    String hourStr, minuStr = "00";
+                    if (millis2TimeSpan / 60 < 10) {
+                        hourStr = "0" + millis2TimeSpan / 60;
+                    } else {
+                        hourStr = millis2TimeSpan / 60 + "";
                     }
-                    if (millis2TimeSpan % 60<10){
-                        minuStr="0"+millis2TimeSpan%60;
-                    }else{
-                        minuStr=""+millis2TimeSpan%60;
+                    if (millis2TimeSpan % 60 < 10) {
+                        minuStr = "0" + millis2TimeSpan % 60;
+                    } else {
+                        minuStr = "" + millis2TimeSpan % 60;
                     }
-                    resultStr = hourStr+":"+minuStr;
+                    resultStr = hourStr + ":" + minuStr;
                 }
             }
         } else {
