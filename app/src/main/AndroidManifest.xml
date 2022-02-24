@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.TimingCalculation">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:theme="@style/PhonTitleTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

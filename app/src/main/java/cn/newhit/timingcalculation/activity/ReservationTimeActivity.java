@@ -3,8 +3,6 @@ package cn.newhit.timingcalculation.activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +11,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +34,6 @@ import butterknife.Unbinder;
 import cn.newhit.timingcalculation.R;
 import cn.newhit.timingcalculation.TimeMinuiteReceiver;
 import cn.newhit.timingcalculation.constants.Constants;
-import cn.newhit.timingcalculation.utils.back.BackHandlerHelper;
 
 /**
  * 1. 可以自定义预约时间单位
@@ -63,6 +61,8 @@ public class ReservationTimeActivity extends AppCompatActivity {
     TextView tvCktip;
     @BindView(R.id.ck_now_time_auto)
     CheckBox ckGetTimeAuto;
+    @BindView(R.id.tv_time_tip)
+    TextView tvTimeTip;
     private TimeMinuiteReceiver mTimeMinuiteReceiver;
     private String mNowTime;
     private Handler mHandler;
@@ -167,7 +167,9 @@ public class ReservationTimeActivity extends AppCompatActivity {
             return;
         }
         String resultTime = calTime(nowTime, targetTime, handleTime);
-        tvTimeResult.setText("所需时间 " + resultTime);
+
+        tvTimeResult.setText(resultTime);
+        tvTimeTip.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -247,27 +249,6 @@ public class ReservationTimeActivity extends AppCompatActivity {
         mTimeMinuiteReceiver.unRegisterReceiver();
     }
 
-    long lastBackPress;
-
-    @Override
-    public void onBackPressed() {
-        if (!BackHandlerHelper.handleBackPress(this)) {
-
-            if (System.currentTimeMillis() - lastBackPress < 1000) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    finishAndRemoveTask();
-                } else {
-                    finish();
-                }
-            } else {
-                lastBackPress = System.currentTimeMillis();
-                ToastUtils.make()
-                        .setBgColor(getResources().getColor(R.color.color_toast_bg))
-                        .setTextColor(Color.WHITE)
-                        .show("再按一次退出程序");
-            }
-        }
-    }
 
     /**
      * 时间选择
