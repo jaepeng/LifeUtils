@@ -258,8 +258,13 @@ public class ReservationTimeActivity extends BaseActivity {
     public void showTimePickerDialog(int themeResId, EditText editText) {
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
         String editTimeStr = editText.getText().toString();
-        String[] split = editTimeStr.trim().split(":");
-        Log.d(TAG, "showTimePickerDialog: split==>" + split[0] + split[1]);
+        String[] split;
+        if (!TextUtils.isEmpty(editTimeStr)){
+            split= editTimeStr.trim().split(":");
+            Log.d(TAG, "showTimePickerDialog: split==>" + split[0] + split[1]);
+        }else{
+            split=new String[0];
+        }
         new TimePickerDialog(this, themeResId,
                 // 绑定监听器
                 (view, hourOfDay, minute) -> {
