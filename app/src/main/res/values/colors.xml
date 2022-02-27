@@ -61,7 +61,6 @@
     <color name="cfc5837">#fffc5837</color>
     <color name="ff2bc1a4">#ff2bc1a4</color>
     <color name="f64c33">#fff64c33</color>
-    <color name="default_text_color">#333333</color>
     <color name="progress_stroke_color">#2cc1a4</color>
     <color name="_2cc1a4">#2cc1a4</color>
     <color name="d8dad9">#d8dad9</color>
@@ -251,10 +250,10 @@
     <color name="c_b1b1b1">#b1b1b1</color>
     <color name="c_ffa100">#FFA100</color>
     <color name="c_dfdfdf">#DFDFDF</color>
-    <color name="pass_text_color">#3E3A39</color>
+    <color name="default_text_color">#3E3A39</color>
 
     <color name="color_FD4765">#FD4765</color>
-    <color name="color_F4F7F9">#F4F7F9</color>
+    <color name="color_background">#F4F7F9</color>
     <color name="color_383A3C">#383A3C</color>
     <color name="color_B7BEC6">#B7BEC6</color>
     <color name="color_F5F8FB">#F5F8FB</color>

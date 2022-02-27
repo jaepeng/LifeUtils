@@ -16,8 +16,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.blankj.utilcode.constant.TimeConstants;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.TimeUtils;
@@ -28,11 +26,11 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.newhit.timingcalculation.R;
-import cn.newhit.timingcalculation.TimeMinuiteReceiver;
+import cn.newhit.timingcalculation.bean.TimeMinuiteReceiver;
+import cn.newhit.timingcalculation.base.BaseActivity;
 import cn.newhit.timingcalculation.constants.Constants;
 
 /**
@@ -44,7 +42,7 @@ import cn.newhit.timingcalculation.constants.Constants;
  * 时间预定计算
  */
 
-public class ReservationTimeActivity extends AppCompatActivity {
+public class ReservationTimeActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private Unbinder mBind;
     @BindView(R.id.edt_nowtime)
@@ -78,11 +76,13 @@ public class ReservationTimeActivity extends AppCompatActivity {
     }
 
     @Override
+    public int getLayouId() {
+        return R.layout.activity_reservation_time;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reservation_time);
-        mBind = ButterKnife.bind(this);
-        MMKV.initialize(this);
         mHandler = new Handler(Looper.getMainLooper());
         initTimeReceiver();
         initView();

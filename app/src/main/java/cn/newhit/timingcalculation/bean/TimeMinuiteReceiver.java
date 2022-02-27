@@ -1,4 +1,4 @@
-package cn.newhit.timingcalculation;
+package cn.newhit.timingcalculation.bean;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

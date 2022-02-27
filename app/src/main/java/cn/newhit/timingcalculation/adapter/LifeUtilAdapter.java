@@ -1,4 +1,4 @@
-package cn.newhit.timingcalculation;
+package cn.newhit.timingcalculation.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -21,6 +21,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.newhit.timingcalculation.LifeUtilBean;
+import cn.newhit.timingcalculation.R;
 
 public class LifeUtilAdapter extends RecyclerView.Adapter<LifeUtilAdapter.ViewHolder> {
     private Context mContext;
@@ -45,7 +47,7 @@ public class LifeUtilAdapter extends RecyclerView.Adapter<LifeUtilAdapter.ViewHo
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         LifeUtilBean lifeUtilBean = mLifeUtilBeans.get(position);
         String imageIcon = "";
-        String lifeUtilUrl = lifeUtilBean.lifeUtilUrl;
+        String lifeUtilUrl = lifeUtilBean.getLifeUtilUrl();
         if (lifeUtilUrl != null) {
             imageIcon = lifeUtilUrl.trim();
         }

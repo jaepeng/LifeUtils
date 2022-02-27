@@ -7,8 +7,11 @@
         android:icon="@mipmap/icon_hammer"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:name=".base.LifeApplication"
         android:theme="@style/Theme.TimingCalculation">
-        <activity android:name=".activity.MainActivity"
+        <activity android:name=".activity.SportRelaxActivity"></activity>
+        <activity
+            android:name=".activity.MainActivity"
             android:theme="@style/PhonTitleTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +21,7 @@
         </activity>
 
         <receiver
-            android:name=".TimeMinuiteReceiver"
+            android:name=".bean.TimeMinuiteReceiver"
             android:enabled="true"
             android:exported="true" />
 

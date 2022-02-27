@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,34 +16,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import cn.newhit.timingcalculation.LifeUtilAdapter;
+import cn.newhit.timingcalculation.adapter.LifeUtilAdapter;
 import cn.newhit.timingcalculation.LifeUtilBean;
 import cn.newhit.timingcalculation.R;
+import cn.newhit.timingcalculation.base.BaseActivity;
 import cn.newhit.timingcalculation.constants.LifeUtilConstants;
 import cn.newhit.timingcalculation.utils.back.BackHandlerHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @BindView(R.id.rv_life_utlis)
     RecyclerView rvLifeUtil;
     private LifeUtilAdapter mLifeUtilAdapter;
     private List<LifeUtilBean> mLifeUtilBeans;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        initData();
+    public int getLayouId() {
+        return R.layout.activity_main;
     }
 
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-        mLifeUtilBeans = new ArrayList<>();
-        mLifeUtilBeans.add(new LifeUtilBean(LifeUtilConstants.LIFE_UTIL_RESERVATION, R.mipmap.icon_life_util_clock));
-        mLifeUtilAdapter = new LifeUtilAdapter(this, mLifeUtilBeans);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData();
+        initView();
+    }
+
+    private void initView() {
         mLifeUtilAdapter.setOnItemClickListener((position, view) -> {
             handleItemAction(position, view);
         });
@@ -55,6 +52,17 @@ public class MainActivity extends AppCompatActivity {
                 .size(1, TypedValue.COMPLEX_UNIT_DIP)
                 .build()
                 .addTo(rvLifeUtil);
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        mLifeUtilBeans = new ArrayList<>();
+        mLifeUtilBeans.add(new LifeUtilBean(LifeUtilConstants.LIFE_UTIL_RESERVATION, R.mipmap.icon_life_util_clock));
+        mLifeUtilBeans.add(new LifeUtilBean(LifeUtilConstants.LIFE_UTIL_SPORT_RELAX, R.mipmap.icon_sport_relax));
+        mLifeUtilAdapter = new LifeUtilAdapter(this, mLifeUtilBeans);
+
 
     }
 
@@ -64,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
             case LifeUtilConstants.LIFE_UTIL_RESERVATION:
                 //预约时间计算
                 ReservationTimeActivity.startRevervationTimeActivity(this);
+                break;
+            case LifeUtilConstants.LIFE_UTIL_SPORT_RELAX:
+                SportRelaxActivity.startSportRelaxActivity(this);
                 break;
             default:
                 break;
