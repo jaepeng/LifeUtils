@@ -9,7 +9,8 @@
         android:supportsRtl="true"
         android:name=".base.LifeApplication"
         android:theme="@style/Theme.TimingCalculation">
-        <activity android:name=".activity.SportRelaxActivity"></activity>
+        <activity android:name=".activity.SportRelaxActivity"
+            android:theme="@style/PhonTitleTheme"></activity>
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/PhonTitleTheme">
@@ -28,11 +29,6 @@
         <activity
             android:name=".activity.ReservationTimeActivity"
             android:theme="@style/PhonTitleTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
