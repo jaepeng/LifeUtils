@@ -2,10 +2,14 @@ package cn.newhit.timingcalculation.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.fondesa.recyclerviewdivider.DividerBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +43,13 @@ public class SportRelaxActivity extends BaseActivity {
 
     private void initView() {
         rvSelectRelaxItem.setAdapter(mRelaxTimeSelectionAdapter);
-        rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false));
+        rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(this, 4, RecyclerView.HORIZONTAL, false));
+        new DividerBuilder(mContext)
+                .color(Color.TRANSPARENT)
+                .showSideDividers()
+                .size(10, TypedValue.COMPLEX_UNIT_DIP)
+                .build()
+                .addTo(rvSelectRelaxItem);
     }
 
     private void initData() {
