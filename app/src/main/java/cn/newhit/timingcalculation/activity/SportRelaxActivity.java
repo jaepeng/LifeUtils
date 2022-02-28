@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.annimon.stream.Stream;
 import com.fondesa.recyclerviewdivider.DividerBuilder;
 
 import java.util.ArrayList;
@@ -42,6 +41,7 @@ public class SportRelaxActivity extends BaseActivity {
     private RelaxSelectedAdapter mRelaxSelectedAdapter;
     private Handler mHandler;
     private CountDownTimer mTimer;
+    private RelaxSelectedAdapter.OnItemLongClick mOnItemLongClick;
 
     @Override
     public int getLayouId() {
@@ -51,7 +51,7 @@ public class SportRelaxActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler=new Handler(getMainLooper());
+        mHandler = new Handler(getMainLooper());
         initData();
         initView();
     }
@@ -85,36 +85,41 @@ public class SportRelaxActivity extends BaseActivity {
         mRelaxTimeSelectionAdapter.setOnItemClickListener((position, view) -> {
             // TODO: 2022/2/28 点击了选择放松内容的Item
             SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
-            selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(),sportRelaxBean.getReleaxName(),true));
+            selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), true));
             mRelaxSelectedAdapter.notifyDataSetChanged();
         });
         mRelaxSelectedAdapter = new RelaxSelectedAdapter(this, selectedSportBeans);
-        mRelaxSelectedAdapter.setOnItemClickListener((position, view) -> {
+        mOnItemLongClick = (position, view) -> {
             // TODO: 2022/2/28 长按已经选进来的东西，可以删除
             selectedSportBeans.remove(position);
             mRelaxSelectedAdapter.notifyDataSetChanged();
-        });
+        };
+        mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
     }
 
     public static void startSportRelaxActivity(Context context) {
         Intent intent = new Intent(context, SportRelaxActivity.class);
         context.startActivity(intent);
     }
+
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
-    public void startRelax(){
+    public void startRelax() {
+        mRelaxSelectedAdapter.setOnItemClickListener(null);
         mHandler.post(() -> {
-            startTimer(selectedSportBeans.get(0));
+            if (mTimer == null) {
+                startTimer(selectedSportBeans.get(0));
+            }
         });
     }
 
     private void startTimer(SportRelaxBean sportRelaxBean) {
         long relaxTime = sportRelaxBean.getRelaxTime();
-        Log.d(TAG, "startTimer: relaxTime==>"+relaxTime+" ,actionName==>"+sportRelaxBean.getReleaxName());
-        mTimer=new CountDownTimer(relaxTime*1000,1000) {
+        Log.d(TAG, "startTimer: relaxTime==>" + relaxTime + " ,actionName==>" + sportRelaxBean.getReleaxName());
+        mTimer = new CountDownTimer(relaxTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.d(TAG, "onTick: relaxTime==>"+relaxTime);
+                Log.d(TAG, "onTick: relaxTime==>" + relaxTime);
                 sportRelaxBean.subTime(1);
                 mRelaxSelectedAdapter.notifyDataSetChanged();
 
@@ -124,8 +129,10 @@ public class SportRelaxActivity extends BaseActivity {
             public void onFinish() {
                 selectedSportBeans.remove(sportRelaxBean);
                 mRelaxSelectedAdapter.notifyDataSetChanged();
-                if (selectedSportBeans.isEmpty()){
+                if (selectedSportBeans.isEmpty()) {
+                    mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
                     mTimer.cancel();
+                    mTimer = null;
                     return;
                 }
                 startTimer(selectedSportBeans.get(0));

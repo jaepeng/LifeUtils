@@ -32,7 +32,7 @@
     <TextView
         android:id="@+id/tv_start_relax"
         android:textSize="18sp"
-        android:padding="8dp"
+        android:padding="10dp"
         android:text="开始放松"
         android:textStyle="bold"
         android:textColor="@color/default_text_color"
