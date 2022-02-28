@@ -4,18 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import cn.newhit.timingcalculation.R;
+import cn.newhit.timingcalculation.adapter.RelaxTimeSelectionAdapter;
 import cn.newhit.timingcalculation.base.BaseActivity;
+import cn.newhit.timingcalculation.bean.SportRelaxBean;
 
 public class SportRelaxActivity extends BaseActivity {
     @BindView(R.id.rv_select_relax_item)
     RecyclerView rvSelectRelaxItem;
     @BindView(R.id.rv_selected_relax)
     RecyclerView rvSelected;
+    private List<SportRelaxBean> selectionSportBeans;
+    private List<SportRelaxBean> selectedSportBeans;
+    private RelaxTimeSelectionAdapter mRelaxTimeSelectionAdapter;
 
     @Override
     public int getLayouId() {
@@ -25,9 +33,31 @@ public class SportRelaxActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initData();
+        initView();
     }
-    public static void startSportRelaxActivity(Context context){
-        Intent intent=new Intent(context,SportRelaxActivity.class);
+
+    private void initView() {
+        rvSelectRelaxItem.setAdapter(mRelaxTimeSelectionAdapter);
+        rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false));
+    }
+
+    private void initData() {
+        selectedSportBeans = new ArrayList<>();
+        selectionSportBeans = new ArrayList<>();
+        selectionSportBeans.add(new SportRelaxBean(25, "左腿", true));
+        selectionSportBeans.add(new SportRelaxBean(15, "左手", false));
+        selectionSportBeans.add(new SportRelaxBean(25, "右腿", true));
+        selectionSportBeans.add(new SportRelaxBean(15, "右手", false));
+
+        mRelaxTimeSelectionAdapter = new RelaxTimeSelectionAdapter(this, selectionSportBeans);
+        mRelaxTimeSelectionAdapter.setOnItemClickListener((position, view) -> {
+            // TODO: 2022/2/28 点击了选择放松内容的Item
+        });
+    }
+
+    public static void startSportRelaxActivity(Context context) {
+        Intent intent = new Intent(context, SportRelaxActivity.class);
         context.startActivity(intent);
     }
 }

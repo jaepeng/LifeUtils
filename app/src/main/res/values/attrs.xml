@@ -4,6 +4,5 @@
         <attr name="show_sub_or_incrase" format="boolean"/>
         <attr name="sub_or_increase_text_size" format="dimension"/>
         <attr name="selactionTextSize" format="dimension"/>
-        <attr name="time_unit" format="integer"/>
     </declare-styleable>
 </resources>

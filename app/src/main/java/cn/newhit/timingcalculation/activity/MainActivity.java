@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.newhit.timingcalculation.adapter.LifeUtilAdapter;
+import cn.newhit.timingcalculation.adapter.ReservationTimeAdapter;
 import cn.newhit.timingcalculation.LifeUtilBean;
 import cn.newhit.timingcalculation.R;
 import cn.newhit.timingcalculation.base.BaseActivity;
@@ -26,7 +26,7 @@ import cn.newhit.timingcalculation.utils.back.BackHandlerHelper;
 public class MainActivity extends BaseActivity {
     @BindView(R.id.rv_life_utlis)
     RecyclerView rvLifeUtil;
-    private LifeUtilAdapter mLifeUtilAdapter;
+    private ReservationTimeAdapter mLifeUtilAdapter;
     private List<LifeUtilBean> mLifeUtilBeans;
 
     @Override
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
         mLifeUtilBeans = new ArrayList<>();
         mLifeUtilBeans.add(new LifeUtilBean(LifeUtilConstants.LIFE_UTIL_RESERVATION, R.mipmap.icon_life_util_clock));
         mLifeUtilBeans.add(new LifeUtilBean(LifeUtilConstants.LIFE_UTIL_SPORT_RELAX, R.mipmap.icon_sport_relax));
-        mLifeUtilAdapter = new LifeUtilAdapter(this, mLifeUtilBeans);
+        mLifeUtilAdapter = new ReservationTimeAdapter(this, mLifeUtilBeans);
 
 
     }

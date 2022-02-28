@@ -4,10 +4,11 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <cn.newhit.timingcalculation.widget.SportRelaxSelactionView
+        android:id="@+id/srv_action"
         app:layout_constraintTop_toTopOf="parent"
-        app:sub_or_increase_text_size="16sp"
-        app:selactionTextSize="18sp"
+        app:sub_or_increase_text_size="8sp"
+        app:selactionTextSize="10sp"
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,8 @@ import com.blankj.utilcode.util.SizeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import cn.newhit.timingcalculation.R;
-import cn.newhit.timingcalculation.bean.SpotRelaxBean;
+import cn.newhit.timingcalculation.bean.SportRelaxBean;
+import cn.newhit.timingcalculation.constants.TimeUnit;
 
 public class SportRelaxSelactionView extends ConstraintLayout {
 
@@ -31,7 +32,8 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     private long mRelaxTime;
     private Context mContext;
     private Handler mHandler;
-    private int mTimeUnit;
+    private TimeUnit mTimeUnit = TimeUnit.SECOND;
+    private OnItemClickListener mOnItemClickListener;
 
     public SportRelaxSelactionView(@NonNull @NotNull Context context) {
         this(context, null);
@@ -51,11 +53,22 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     }
 
     private void initListener() {
-        mSubTime.setOnClickListener(v -> {
-            updateTime(-1 * mTimeUnit);
-        });
         mIncreaseTime.setOnClickListener(v -> {
-            updateTime(1 * mTimeUnit);
+            updateTime(1);
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onIncreaseClick(mRelaxTime + 1, v);
+            }
+        });
+        mSubTime.setOnClickListener(v -> {
+            updateTime(-1);
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onSubTimeClick(mRelaxTime - 1, v);
+            }
+        });
+        mRelaxName.setOnClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onActionClick(mRelaxTime, v);
+            }
         });
 
     }
@@ -69,8 +82,11 @@ public class SportRelaxSelactionView extends ConstraintLayout {
         mTvRelaxTime = rootView.findViewById(R.id.tv_sport_selaction_time);
         mSubTime.setTextSize(mSubOrIncreaseTextSize);
         mIncreaseTime.setTextSize(mSubOrIncreaseTextSize);
+        mSubTime.setVisibility(mShowSubOrIncrease ? VISIBLE : INVISIBLE);
+        mIncreaseTime.setVisibility(mShowSubOrIncrease ? VISIBLE : INVISIBLE);
         mTvRelaxTime.setTextSize(mSelectionTextSize);
         mRelaxName.setTextSize(mSelectionTextSize);
+
 
     }
 
@@ -79,14 +95,13 @@ public class SportRelaxSelactionView extends ConstraintLayout {
         mShowSubOrIncrease = a.getBoolean(R.styleable.SportRelaxSelactionView_show_sub_or_incrase, true);
         mSelectionTextSize = a.getDimension(R.styleable.SportRelaxSelactionView_selactionTextSize, SizeUtils.px2sp(SizeUtils.dp2px(14)));
         mSubOrIncreaseTextSize = a.getDimension(R.styleable.SportRelaxSelactionView_sub_or_increase_text_size, SizeUtils.px2sp(SizeUtils.dp2px(14)));
-        mTimeUnit = a.getInt(R.styleable.SportRelaxSelactionView_time_unit, 1);
         a.recycle();
     }
 
-    public void setSportData(SpotRelaxBean sportData) {
+    public void setSportData(SportRelaxBean sportData) {
         mRelaxName.setText(sportData.getReleaxName());
         mRelaxTime = sportData.getRelaxTime();
-        mTvRelaxTime.setText(mRelaxTime + "");
+        mTvRelaxTime.setText(mRelaxTime + mTimeUnit.getTimeUnit());
     }
 
     /**
@@ -101,7 +116,7 @@ public class SportRelaxSelactionView extends ConstraintLayout {
             }
             mRelaxTime += changeTime;
             if (mTvRelaxTime != null) {
-                mTvRelaxTime.setText(mRelaxTime + "");
+                mTvRelaxTime.setText(mRelaxTime + mTimeUnit.getTimeUnit());
             }
         });
     }
@@ -114,8 +129,32 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     public void setRealTime(long realTime) {
         mHandler.post(() -> {
 
-            mTvRelaxTime.setText(realTime + "");
+            mTvRelaxTime.setText(realTime + mTimeUnit.getTimeUnit());
         });
+    }
+
+    public void setShowSubOrIncrease(boolean showOrHide) {
+        mShowSubOrIncrease = showOrHide;
+        mSubTime.setVisibility(mShowSubOrIncrease ? VISIBLE : INVISIBLE);
+        mIncreaseTime.setVisibility(mShowSubOrIncrease ? VISIBLE : INVISIBLE);
+    }
+
+    public void setTimeUnit(TimeUnit timeUnit) {
+        this.mTimeUnit = timeUnit;
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+
+    }
+
+    public interface OnItemClickListener {
+        void onSubTimeClick(long realTime, View view);
+
+        void onIncreaseClick(long realTime, View view);
+
+        void onActionClick(long realTime, View view);
     }
 
 

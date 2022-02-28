@@ -24,12 +24,12 @@ import butterknife.ButterKnife;
 import cn.newhit.timingcalculation.LifeUtilBean;
 import cn.newhit.timingcalculation.R;
 
-public class LifeUtilAdapter extends RecyclerView.Adapter<LifeUtilAdapter.ViewHolder> {
+public class ReservationTimeAdapter extends RecyclerView.Adapter<ReservationTimeAdapter.ViewHolder> {
     private Context mContext;
     private List<LifeUtilBean> mLifeUtilBeans;
     private OnItemClickListener mOnItemClickListener;
 
-    public LifeUtilAdapter(Context context, List<LifeUtilBean> lifeUtilBeans) {
+    public ReservationTimeAdapter(Context context, List<LifeUtilBean> lifeUtilBeans) {
         mContext = context;
         mLifeUtilBeans = lifeUtilBeans;
     }
