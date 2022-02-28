@@ -2,6 +2,7 @@ package cn.newhit.timingcalculation.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -34,6 +35,10 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     private Handler mHandler;
     private TimeUnit mTimeUnit = TimeUnit.SECOND;
     private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClick;
+    private int mActionTextColor;
+    private int mSubOrIncreaseTextColor;
+    private SportRelaxBean mSportRelaxBean;
 
     public SportRelaxSelactionView(@NonNull @NotNull Context context) {
         this(context, null);
@@ -70,6 +75,12 @@ public class SportRelaxSelactionView extends ConstraintLayout {
                 mOnItemClickListener.onActionClick(mRelaxTime, v);
             }
         });
+        mRelaxName.setOnLongClickListener(v -> {
+            if (mOnItemLongClick != null) {
+                mOnItemLongClick.onActionLongClick(mRelaxTime, v);
+            }
+            return true;
+        });
 
     }
 
@@ -80,6 +91,10 @@ public class SportRelaxSelactionView extends ConstraintLayout {
         mRelaxName = rootView.findViewById(R.id.tv_sport_selaction_name);
         mIncreaseTime = rootView.findViewById(R.id.tv_sport_selaction_increase);
         mTvRelaxTime = rootView.findViewById(R.id.tv_sport_selaction_time);
+        mSubTime.setTextColor(mSubOrIncreaseTextColor);
+        mIncreaseTime.setTextColor(mSubOrIncreaseTextColor);
+        mRelaxName.setTextColor(mActionTextColor);
+        mTvRelaxTime.setTextColor(mActionTextColor);
         mSubTime.setTextSize(mSubOrIncreaseTextSize);
         mIncreaseTime.setTextSize(mSubOrIncreaseTextSize);
         mSubTime.setVisibility(mShowSubOrIncrease ? VISIBLE : INVISIBLE);
@@ -95,13 +110,19 @@ public class SportRelaxSelactionView extends ConstraintLayout {
         mShowSubOrIncrease = a.getBoolean(R.styleable.SportRelaxSelactionView_show_sub_or_incrase, true);
         mSelectionTextSize = a.getDimension(R.styleable.SportRelaxSelactionView_selactionTextSize, SizeUtils.px2sp(SizeUtils.dp2px(14)));
         mSubOrIncreaseTextSize = a.getDimension(R.styleable.SportRelaxSelactionView_sub_or_increase_text_size, SizeUtils.px2sp(SizeUtils.dp2px(14)));
+        mActionTextColor = a.getColor(R.styleable.SportRelaxSelactionView_actionTextColor, Color.WHITE);
+        mSubOrIncreaseTextColor = a.getColor(R.styleable.SportRelaxSelactionView_subOrIncreaseColor, Color.WHITE);
         a.recycle();
     }
 
     public void setSportData(SportRelaxBean sportData) {
-        mRelaxName.setText(sportData.getReleaxName());
-        mRelaxTime = sportData.getRelaxTime();
+        mSportRelaxBean=sportData;
+        mRelaxName.setText(mSportRelaxBean.getReleaxName());
+        mRelaxTime = mSportRelaxBean.getRelaxTime();
         mTvRelaxTime.setText(mRelaxTime + mTimeUnit.getTimeUnit());
+    }
+    public void upDateSportData(){
+
     }
 
     /**
@@ -115,6 +136,7 @@ public class SportRelaxSelactionView extends ConstraintLayout {
                 return;
             }
             mRelaxTime += changeTime;
+            mSportRelaxBean.setRelaxTime(mRelaxTime);
             if (mTvRelaxTime != null) {
                 mTvRelaxTime.setText(mRelaxTime + mTimeUnit.getTimeUnit());
             }
@@ -150,11 +172,24 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     }
 
     public interface OnItemClickListener {
+        //点击减少
         void onSubTimeClick(long realTime, View view);
 
+        //点击增加
         void onIncreaseClick(long realTime, View view);
 
+        //内容点击
         void onActionClick(long realTime, View view);
+
+    }
+
+    public void setOnItemLongClick(OnItemLongClickListener onItemLongClick) {
+        this.mOnItemLongClick = onItemLongClick;
+    }
+
+    public interface OnItemLongClickListener {
+
+        void onActionLongClick(long realTime, View view);
     }
 
 

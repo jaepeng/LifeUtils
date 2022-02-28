@@ -271,4 +271,7 @@
 
     <color name="color_main_bg">#F4F7F9</color>
     <color name="c_B0D8FF">#B0D8FF</color>
+<!--    relaxActivity用到的-->
+    <color name="bg_selacted">#66CCCC</color>
+    <color name="bg_selaction">#666699</color>
 </resources>

@@ -4,5 +4,7 @@
         <attr name="show_sub_or_incrase" format="boolean"/>
         <attr name="sub_or_increase_text_size" format="dimension"/>
         <attr name="selactionTextSize" format="dimension"/>
+        <attr name="actionTextColor" format="color"/>
+        <attr name="subOrIncreaseColor" format="color"/>
     </declare-styleable>
 </resources>
