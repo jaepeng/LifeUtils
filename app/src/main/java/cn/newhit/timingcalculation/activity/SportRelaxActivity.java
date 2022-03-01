@@ -2,12 +2,10 @@ package cn.newhit.timingcalculation.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,8 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.fondesa.recyclerviewdivider.DividerBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,22 +74,20 @@ public class SportRelaxActivity extends BaseActivity {
     private void initData() {
         selectedSportBeans = new ArrayList<>();
         selectionSportBeans = new ArrayList<>();
-        selectionSportBeans.add(new SportRelaxBean(25, "左腿", true));
+        selectionSportBeans.add(new SportRelaxBean(25, "左腿", false));
         selectionSportBeans.add(new SportRelaxBean(15, "左手", false));
-        selectionSportBeans.add(new SportRelaxBean(25, "右腿", true));
+        selectionSportBeans.add(new SportRelaxBean(25, "右腿", false));
         selectionSportBeans.add(new SportRelaxBean(15, "右手", false));
-        selectionSportBeans.add(new SportRelaxBean(5, "间隔", true));
-
+        selectionSportBeans.add(new SportRelaxBean(5, "间隔", false));
+        // TODO: 2022/3/1 使用数据库存储设置中的自定义放松数据，并且在这个时候进行添加以及删除
         mRelaxTimeSelectionAdapter = new RelaxTimeSelectionAdapter(this, selectionSportBeans);
         mRelaxTimeSelectionAdapter.setOnItemClickListener((position, view) -> {
-            // TODO: 2022/2/28 点击了选择放松内容的Item
             SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
             selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), true));
             mRelaxSelectedAdapter.notifyDataSetChanged();
         });
         mRelaxSelectedAdapter = new RelaxSelectedAdapter(this, selectedSportBeans);
         mOnItemLongClick = (position, view) -> {
-            // TODO: 2022/2/28 长按已经选进来的东西，可以删除
             selectedSportBeans.remove(position);
             mRelaxSelectedAdapter.notifyDataSetChanged();
         };
@@ -108,11 +102,7 @@ public class SportRelaxActivity extends BaseActivity {
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
     public void startRelax() {
-        rvSelectRelaxItem.setVisibility(View.INVISIBLE);
-        clRelaxTimeShow.setVisibility(View.VISIBLE);
-        rvSelected.setVisibility(View.INVISIBLE);
-        tvStartRelax.setVisibility(View.INVISIBLE);
-        mRelaxSelectedAdapter.setOnItemClickListener(null);
+        updateUI(false);
         mHandler.post(() -> {
             if (mTimer == null) {
                 startTimer(selectedSportBeans.get(0));
@@ -131,7 +121,7 @@ public class SportRelaxActivity extends BaseActivity {
 
                 mHandler.post(() -> {
                     sportRelaxBean.subTime(1);
-                    tvRelaxShowTime.setText(sportRelaxBean.getRelaxTime()+sportRelaxBean.getTimeUnit().getTimeUnit());
+                    tvRelaxShowTime.setText(sportRelaxBean.getRelaxTime() + sportRelaxBean.getTimeUnit().getTimeUnit());
                 });
                 mRelaxSelectedAdapter.notifyDataSetChanged();
 
@@ -142,10 +132,7 @@ public class SportRelaxActivity extends BaseActivity {
                 selectedSportBeans.remove(sportRelaxBean);
                 mRelaxSelectedAdapter.notifyDataSetChanged();
                 if (selectedSportBeans.isEmpty()) {
-                    rvSelectRelaxItem.setVisibility(View.VISIBLE);
-                    rvSelected.setVisibility(View.VISIBLE);
-                    clRelaxTimeShow.setVisibility(View.INVISIBLE);
-                    mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
+                    updateUI(true);
                     mTimer.cancel();
                     mTimer = null;
                     return;
@@ -155,5 +142,21 @@ public class SportRelaxActivity extends BaseActivity {
             }
         };
         mTimer.start();
+    }
+
+    private void updateUI(boolean needShowMain) {
+        if (needShowMain) {
+            rvSelectRelaxItem.setVisibility(View.VISIBLE);
+            rvSelected.setVisibility(View.VISIBLE);
+            clRelaxTimeShow.setVisibility(View.INVISIBLE);
+            tvStartRelax.setVisibility(View.VISIBLE);
+            mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
+        } else {
+            rvSelectRelaxItem.setVisibility(View.INVISIBLE);
+            rvSelected.setVisibility(View.INVISIBLE);
+            clRelaxTimeShow.setVisibility(View.VISIBLE);
+            tvStartRelax.setVisibility(View.INVISIBLE);
+            mRelaxSelectedAdapter.setOnItemClickListener(null);
+        }
     }
 }
