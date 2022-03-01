@@ -70,6 +70,11 @@ public class SportRelaxSelactionView extends ConstraintLayout {
                 mOnItemClickListener.onSubTimeClick(mRelaxTime - 1, v);
             }
         });
+        mTvRelaxTime.setOnClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onActionClick(mRelaxTime, v);
+            }
+        });
         mRelaxName.setOnClickListener(v -> {
             if (mOnItemClickListener != null) {
                 mOnItemClickListener.onActionClick(mRelaxTime, v);
@@ -116,12 +121,13 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     }
 
     public void setSportData(SportRelaxBean sportData) {
-        mSportRelaxBean=sportData;
+        mSportRelaxBean = sportData;
         mRelaxName.setText(mSportRelaxBean.getReleaxName());
         mRelaxTime = mSportRelaxBean.getRelaxTime();
         mTvRelaxTime.setText(mRelaxTime + mTimeUnit.getTimeUnit());
     }
-    public void upDateSportData(){
+
+    public void upDateSportData() {
 
     }
 
@@ -180,6 +186,7 @@ public class SportRelaxSelactionView extends ConstraintLayout {
 
         //内容点击
         void onActionClick(long realTime, View view);
+
 
     }
 

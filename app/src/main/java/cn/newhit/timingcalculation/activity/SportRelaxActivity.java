@@ -8,8 +8,10 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +37,13 @@ public class SportRelaxActivity extends BaseActivity {
     RecyclerView rvSelected;
     @BindView(R.id.tv_start_relax)
     TextView tvStartRelax;
+    @BindView(R.id.tv_relax_show_name)
+    TextView tvRelaxShowName;
+    @BindView(R.id.tv_relax_show_time)
+    TextView tvRelaxShowTime;
+    @BindView(R.id.cl_relax_time_show)
+    ConstraintLayout clRelaxTimeShow;
+
     private List<SportRelaxBean> selectionSportBeans;
     private List<SportRelaxBean> selectedSportBeans;
     private RelaxTimeSelectionAdapter mRelaxTimeSelectionAdapter;
@@ -59,12 +68,6 @@ public class SportRelaxActivity extends BaseActivity {
     private void initView() {
         rvSelectRelaxItem.setAdapter(mRelaxTimeSelectionAdapter);
         rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(this, 4, RecyclerView.HORIZONTAL, false));
-        new DividerBuilder(mContext)
-                .color(Color.TRANSPARENT)
-                .showSideDividers()
-                .size(10, TypedValue.COMPLEX_UNIT_DIP)
-                .build()
-                .addTo(rvSelectRelaxItem);
 
         rvSelected.setAdapter(mRelaxSelectedAdapter);
         rvSelected.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -105,6 +108,10 @@ public class SportRelaxActivity extends BaseActivity {
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
     public void startRelax() {
+        rvSelectRelaxItem.setVisibility(View.INVISIBLE);
+        clRelaxTimeShow.setVisibility(View.VISIBLE);
+        rvSelected.setVisibility(View.INVISIBLE);
+        tvStartRelax.setVisibility(View.INVISIBLE);
         mRelaxSelectedAdapter.setOnItemClickListener(null);
         mHandler.post(() -> {
             if (mTimer == null) {
@@ -116,11 +123,16 @@ public class SportRelaxActivity extends BaseActivity {
     private void startTimer(SportRelaxBean sportRelaxBean) {
         long relaxTime = sportRelaxBean.getRelaxTime();
         Log.d(TAG, "startTimer: relaxTime==>" + relaxTime + " ,actionName==>" + sportRelaxBean.getReleaxName());
+        tvRelaxShowName.setText(sportRelaxBean.getReleaxName());
         mTimer = new CountDownTimer(relaxTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 Log.d(TAG, "onTick: relaxTime==>" + relaxTime);
-                sportRelaxBean.subTime(1);
+
+                mHandler.post(() -> {
+                    sportRelaxBean.subTime(1);
+                    tvRelaxShowTime.setText(sportRelaxBean.getRelaxTime()+sportRelaxBean.getTimeUnit().getTimeUnit());
+                });
                 mRelaxSelectedAdapter.notifyDataSetChanged();
 
             }
@@ -130,6 +142,9 @@ public class SportRelaxActivity extends BaseActivity {
                 selectedSportBeans.remove(sportRelaxBean);
                 mRelaxSelectedAdapter.notifyDataSetChanged();
                 if (selectedSportBeans.isEmpty()) {
+                    rvSelectRelaxItem.setVisibility(View.VISIBLE);
+                    rvSelected.setVisibility(View.VISIBLE);
+                    clRelaxTimeShow.setVisibility(View.INVISIBLE);
                     mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
                     mTimer.cancel();
                     mTimer = null;

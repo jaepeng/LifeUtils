@@ -11,36 +11,75 @@
     tools:context=".activity.SportRelaxActivity">
     <!--    放松可选项-->
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@drawable/bg_relax_selaction"
+        android:paddingHorizontal="10dp"
         android:id="@+id/rv_select_relax_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_relax_selaction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <!--    已经选择的Item-->
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@drawable/bg_relax_selacted"
+        android:paddingHorizontal="10dp"
         android:id="@+id/rv_selected_relax"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_relax_selacted"
         app:layout_constraintBottom_toTopOf="@+id/tv_start_relax"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rv_select_relax_item" />
+
     <TextView
         android:id="@+id/tv_start_relax"
-        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:padding="10dp"
         android:text="开始放松"
-        android:textStyle="bold"
         android:textColor="@color/default_text_color"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="invisible"
+        android:id="@+id/cl_relax_time_show"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:background="@drawable/bg_relax_selacted"
+        app:layout_constraintBottom_toTopOf="@+id/tv_start_relax"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_relax_show_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="12"
+            android:maxLines="1"
+            android:textSize="150sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_relax_show_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="12"
+            android:textSize="130sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/tv_relax_show_time"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

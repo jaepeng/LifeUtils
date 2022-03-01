@@ -1,6 +1,7 @@
 package cn.newhit.timingcalculation.bean;
 
-import java.util.concurrent.TimeUnit;
+
+import cn.newhit.timingcalculation.constants.TimeUnit;
 
 /**
  * 运动放松的bean
@@ -11,7 +12,7 @@ public class SportRelaxBean {
     long relaxTime;
     //放松的名称
     String releaxName;
-    TimeUnit mTimeUnit=TimeUnit.SECONDS;
+    TimeUnit mTimeUnit= TimeUnit.SECOND;
     boolean showSubIncrease=true;
 
     public SportRelaxBean(long relaxTime, String releaxName, boolean showSubIncrease) {
