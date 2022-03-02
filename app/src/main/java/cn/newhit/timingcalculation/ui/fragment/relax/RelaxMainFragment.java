@@ -1,18 +1,23 @@
-package cn.newhit.timingcalculation.activity;
+package cn.newhit.timingcalculation.ui.fragment.relax;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +27,13 @@ import butterknife.OnClick;
 import cn.newhit.timingcalculation.R;
 import cn.newhit.timingcalculation.adapter.RelaxSelectedAdapter;
 import cn.newhit.timingcalculation.adapter.RelaxTimeSelectionAdapter;
-import cn.newhit.timingcalculation.base.BaseActivity;
+import cn.newhit.timingcalculation.base.BaseFragment;
 import cn.newhit.timingcalculation.bean.SportRelaxBean;
 
-public class SportRelaxActivity extends BaseActivity {
-    private static final String TAG = "SportRelaxActivity";
+import static android.os.Looper.getMainLooper;
+
+public class RelaxMainFragment extends BaseFragment {
+    private static final String TAG = "RelaxMainFragment";
     @BindView(R.id.rv_select_relax_item)
     RecyclerView rvSelectRelaxItem;
     @BindView(R.id.rv_selected_relax)
@@ -49,29 +56,20 @@ public class SportRelaxActivity extends BaseActivity {
     private RelaxSelectedAdapter.OnItemLongClick mOnItemLongClick;
 
     @Override
-    public int getLayouId() {
-        return R.layout.activity_sport_relax;
+    protected int getLayoutId() {
+        return R.layout.fragment_relax_main;
+    }
+
+    @Nullable
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        mHandler = new Handler(getMainLooper());
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mHandler = new Handler(getMainLooper());
-        initData();
-        initView();
-    }
-
-    private void initView() {
-        rvSelectRelaxItem.setAdapter(mRelaxTimeSelectionAdapter);
-        rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(this, 4, RecyclerView.HORIZONTAL, false));
-
-        rvSelected.setAdapter(mRelaxSelectedAdapter);
-        rvSelected.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-
-
-    }
-
-    private void initData() {
+    protected void initData() {
         selectedSportBeans = new ArrayList<>();
         selectionSportBeans = new ArrayList<>();
         selectionSportBeans.add(new SportRelaxBean(25, "左腿", false));
@@ -80,13 +78,13 @@ public class SportRelaxActivity extends BaseActivity {
         selectionSportBeans.add(new SportRelaxBean(15, "右手", false));
         selectionSportBeans.add(new SportRelaxBean(5, "间隔", false));
         // TODO: 2022/3/1 使用数据库存储设置中的自定义放松数据，并且在这个时候进行添加以及删除
-        mRelaxTimeSelectionAdapter = new RelaxTimeSelectionAdapter(this, selectionSportBeans);
+        mRelaxTimeSelectionAdapter = new RelaxTimeSelectionAdapter(mContext, selectionSportBeans);
         mRelaxTimeSelectionAdapter.setOnItemClickListener((position, view) -> {
             SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
             selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), true));
             mRelaxSelectedAdapter.notifyDataSetChanged();
         });
-        mRelaxSelectedAdapter = new RelaxSelectedAdapter(this, selectedSportBeans);
+        mRelaxSelectedAdapter = new RelaxSelectedAdapter(mContext, selectedSportBeans);
         mOnItemLongClick = (position, view) -> {
             selectedSportBeans.remove(position);
             mRelaxSelectedAdapter.notifyDataSetChanged();
@@ -94,11 +92,14 @@ public class SportRelaxActivity extends BaseActivity {
         mRelaxSelectedAdapter.setOnItemClickListener(mOnItemLongClick);
     }
 
-    public static void startSportRelaxActivity(Context context) {
-        Intent intent = new Intent(context, SportRelaxActivity.class);
-        context.startActivity(intent);
-    }
+    @Override
+    protected void initView() {
+        rvSelectRelaxItem.setAdapter(mRelaxTimeSelectionAdapter);
+        rvSelectRelaxItem.setLayoutManager(new GridLayoutManager(mContext, 4, RecyclerView.HORIZONTAL, false));
 
+        rvSelected.setAdapter(mRelaxSelectedAdapter);
+        rvSelected.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
+    }
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
     public void startRelax() {

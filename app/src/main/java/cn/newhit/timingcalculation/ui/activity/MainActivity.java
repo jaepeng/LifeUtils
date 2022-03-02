@@ -1,4 +1,4 @@
-package cn.newhit.timingcalculation.activity;
+package cn.newhit.timingcalculation.ui.activity;
 
 import android.graphics.Color;
 import android.os.Build;

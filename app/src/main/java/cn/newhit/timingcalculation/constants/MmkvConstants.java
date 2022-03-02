@@ -1,6 +1,6 @@
 package cn.newhit.timingcalculation.constants;
 
-public class Constants {
+public class MmkvConstants {
     /************************MMKV代码******************************/
     //上一次记录的操作时间
     public static final String MMKV_CODE_LAST_HANDLE_TIME="mmkv_code_last_handle_time";

@@ -1,4 +1,4 @@
-package cn.newhit.timingcalculation.activity;
+package cn.newhit.timingcalculation.ui.activity;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -31,7 +31,7 @@ import butterknife.Unbinder;
 import cn.newhit.timingcalculation.R;
 import cn.newhit.timingcalculation.bean.TimeMinuiteReceiver;
 import cn.newhit.timingcalculation.base.BaseActivity;
-import cn.newhit.timingcalculation.constants.Constants;
+import cn.newhit.timingcalculation.constants.MmkvConstants;
 
 /**
  * 1. 可以自定义预约时间单位
@@ -97,7 +97,7 @@ public class ReservationTimeActivity extends BaseActivity {
         });
         ckGetTimeAuto.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Log.d(TAG, "initListenre: onCheckChange==>" + isChecked);
-            MMKV.defaultMMKV().encode(Constants.MMKV_CODE_LAST_AUTO_GET_TIME, isChecked);
+            MMKV.defaultMMKV().encode(MmkvConstants.MMKV_CODE_LAST_AUTO_GET_TIME, isChecked);
             if (isChecked) {
                 //自动更新时间
                 isAutoGetTime = true;
@@ -137,10 +137,10 @@ public class ReservationTimeActivity extends BaseActivity {
     private void initView() {
         edtNowTime.setText(TimeUtils.millis2String(System.currentTimeMillis(), "HH:mm"));
         length = edtNowTime.getText().toString().length();
-        isAutoGetTime = MMKV.defaultMMKV().decodeBool(Constants.MMKV_CODE_LAST_AUTO_GET_TIME, true);
+        isAutoGetTime = MMKV.defaultMMKV().decodeBool(MmkvConstants.MMKV_CODE_LAST_AUTO_GET_TIME, true);
         ckGetTimeAuto.setChecked(isAutoGetTime);
-        edtHandleTime.setText(MMKV.defaultMMKV().decodeString(Constants.MMKV_CODE_LAST_HANDLE_TIME, ""));
-        edtTargetTime.setText(MMKV.defaultMMKV().decodeString(Constants.MMKV_CODE_LAST_TARGET_TIME, ""));
+        edtHandleTime.setText(MMKV.defaultMMKV().decodeString(MmkvConstants.MMKV_CODE_LAST_HANDLE_TIME, ""));
+        edtTargetTime.setText(MMKV.defaultMMKV().decodeString(MmkvConstants.MMKV_CODE_LAST_TARGET_TIME, ""));
     }
 
     @Override
@@ -225,8 +225,8 @@ public class ReservationTimeActivity extends BaseActivity {
         } else {
             resultStr = "00:00";
         }
-        MMKV.defaultMMKV().encode(Constants.MMKV_CODE_LAST_HANDLE_TIME, handleTimeStr);
-        MMKV.defaultMMKV().encode(Constants.MMKV_CODE_LAST_TARGET_TIME, targetTimeStr);
+        MMKV.defaultMMKV().encode(MmkvConstants.MMKV_CODE_LAST_HANDLE_TIME, handleTimeStr);
+        MMKV.defaultMMKV().encode(MmkvConstants.MMKV_CODE_LAST_TARGET_TIME, targetTimeStr);
         return resultStr;
     }
 
@@ -245,7 +245,6 @@ public class ReservationTimeActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBind.unbind();
         mTimeMinuiteReceiver.unRegisterReceiver();
     }
 

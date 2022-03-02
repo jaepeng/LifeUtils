@@ -225,7 +225,7 @@
     <color name="c_888792">#888792</color>
     <color name="c_f8f8f8">#f8f8f8</color>
     <color name="c_4ec1f2">#ff4ec1f2</color>
-    <color name="c_3EBCF0">#3EBCF0</color>
+
     <color name="c_B3C2D9">#B3C2D9</color>
     <color name="c_F1F1F1">#F1F1F1</color>
     <color name="c_4C9AF8">#4C9AF8</color>
@@ -274,4 +274,5 @@
 <!--    relaxActivity用到的-->
     <color name="bg_selacted">#66CCCC</color>
     <color name="bg_selaction">#666699</color>
+    <color name="color_select_text">#3EBCF0</color>
 </resources>

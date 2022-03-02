@@ -9,10 +9,10 @@
         android:supportsRtl="true"
         android:name=".base.LifeApplication"
         android:theme="@style/Theme.TimingCalculation">
-        <activity android:name=".activity.SportRelaxActivity"
+        <activity android:name=".ui.activity.SportRelaxActivity"
             android:theme="@style/PhonTitleTheme"></activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:theme="@style/PhonTitleTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".activity.ReservationTimeActivity"
+            android:name=".ui.activity.ReservationTimeActivity"
             android:theme="@style/PhonTitleTheme">
         </activity>
     </application>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_F5F8FB"
     android:fitsSystemWindows="true"
-    tools:context=".activity.ReservationTimeActivity">
+    tools:context=".ui.activity.ReservationTimeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_nowtime"
