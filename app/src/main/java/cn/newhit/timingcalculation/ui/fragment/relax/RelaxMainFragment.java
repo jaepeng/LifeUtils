@@ -1,23 +1,18 @@
 package cn.newhit.timingcalculation.ui.fragment.relax;
 
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +24,10 @@ import cn.newhit.timingcalculation.adapter.RelaxSelectedAdapter;
 import cn.newhit.timingcalculation.adapter.RelaxTimeSelectionAdapter;
 import cn.newhit.timingcalculation.base.BaseFragment;
 import cn.newhit.timingcalculation.bean.SportRelaxBean;
+import cn.newhit.timingcalculation.constants.MessageCode;
+import cn.newhit.timingcalculation.greendao.SportRelaxDaoManager;
+import cn.newhit.timingcalculation.greendao.SportRelaxModel;
+import cn.newhit.timingcalculation.message.MessageEvent;
 
 import static android.os.Looper.getMainLooper;
 
@@ -54,22 +53,19 @@ public class RelaxMainFragment extends BaseFragment {
     private Handler mHandler;
     private CountDownTimer mTimer;
     private RelaxSelectedAdapter.OnItemLongClick mOnItemLongClick;
+    private SportRelaxDaoManager mSportRelaxDaoManager;
+
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_relax_main;
     }
 
-    @Nullable
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        mHandler = new Handler(getMainLooper());
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @Override
     protected void initData() {
+        EventBus.getDefault().register(this);
+        mSportRelaxDaoManager = SportRelaxDaoManager.getInstance();
+        mHandler = new Handler(getMainLooper());
         selectedSportBeans = new ArrayList<>();
         selectionSportBeans = new ArrayList<>();
         selectionSportBeans.add(new SportRelaxBean(25, "左腿", false));
@@ -100,6 +96,7 @@ public class RelaxMainFragment extends BaseFragment {
         rvSelected.setAdapter(mRelaxSelectedAdapter);
         rvSelected.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
     }
+
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
     public void startRelax() {
@@ -159,5 +156,19 @@ public class RelaxMainFragment extends BaseFragment {
             tvStartRelax.setVisibility(View.INVISIBLE);
             mRelaxSelectedAdapter.setOnItemClickListener(null);
         }
+    }
+
+    @Subscribe
+    public void OnMessageEvent(MessageEvent messageEvent) {
+        int messageCode = messageEvent.getMessageCode();
+        switch (messageCode) {
+            case MessageCode.CODE_UPDEATE_RELAX_ITEM:
+                List<SportRelaxModel> all = mSportRelaxDaoManager.getAll();
+                Log.d(TAG, "OnMessageEvent: all==>"+all);
+                break;
+            default:
+                break;
+        }
+
     }
 }

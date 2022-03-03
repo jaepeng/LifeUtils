@@ -24,6 +24,7 @@ import cn.newhit.timingcalculation.adapter.SportRelaxContainerPagerAdapter;
 import cn.newhit.timingcalculation.base.BaseActivity;
 import cn.newhit.timingcalculation.bean.RelaxMenuBean;
 import cn.newhit.timingcalculation.ui.fragment.relax.RelaxMainFragment;
+import cn.newhit.timingcalculation.ui.fragment.relax.RelaxSettingFragment;
 
 public class SportRelaxActivity extends BaseActivity {
     private static final String TAG = "SportRelaxActivity";
@@ -82,7 +83,7 @@ public class SportRelaxActivity extends BaseActivity {
     private void initData() {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(new RelaxMainFragment());
-        mFragmentList.add(new RelaxMainFragment());
+        mFragmentList.add(new RelaxSettingFragment());
         mRelaxMenuBeans=new ArrayList<>();
         mRelaxMenuBeans.add(new RelaxMenuBean("放松",R.mipmap.icon_sport_relax,true));
         mRelaxMenuBeans.add(new RelaxMenuBean("设置",R.mipmap.icon_sport_relax));
