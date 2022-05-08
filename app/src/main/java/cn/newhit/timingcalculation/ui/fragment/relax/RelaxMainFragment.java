@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.annimon.stream.Stream;
+import com.blankj.utilcode.util.ToastUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -46,11 +49,16 @@ public class RelaxMainFragment extends BaseFragment {
     @BindView(R.id.cl_relax_time_show)
     ConstraintLayout clRelaxTimeShow;
 
+    //可选的放松列表
     private List<SportRelaxBean> selectionSportBeans;
+    //已选择的放松列表
     private List<SportRelaxBean> selectedSportBeans;
+    //上层 可选 的放松列表的适配器
     private RelaxTimeSelectionAdapter mRelaxTimeSelectionAdapter;
+    //下层 已选 的放松列表适配器
     private RelaxSelectedAdapter mRelaxSelectedAdapter;
     private Handler mHandler;
+    //计时器
     private CountDownTimer mTimer;
     private RelaxSelectedAdapter.OnItemLongClick mOnItemLongClick;
     private SportRelaxDaoManager mSportRelaxDaoManager;
@@ -100,6 +108,11 @@ public class RelaxMainFragment extends BaseFragment {
     //开始放松的方法
     @OnClick(R.id.tv_start_relax)
     public void startRelax() {
+        if (selectedSportBeans.isEmpty()) {
+            //如果没有已经选中的放松列表则直接返回不进行倒计时
+            ToastUtils.showShort("请先选择放松运动！");
+            return;
+        }
         updateUI(false);
         mHandler.post(() -> {
             if (mTimer == null) {
@@ -108,7 +121,15 @@ public class RelaxMainFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 开始放松进行倒计时
+     *
+     * @param sportRelaxBean 放松运动包装类
+     */
     private void startTimer(SportRelaxBean sportRelaxBean) {
+        if (sportRelaxBean == null) {
+            return;
+        }
         long relaxTime = sportRelaxBean.getRelaxTime();
         Log.d(TAG, "startTimer: relaxTime==>" + relaxTime + " ,actionName==>" + sportRelaxBean.getReleaxName());
         tvRelaxShowName.setText(sportRelaxBean.getReleaxName());
@@ -142,6 +163,12 @@ public class RelaxMainFragment extends BaseFragment {
         mTimer.start();
     }
 
+    /**
+     * 是显示倒计时界面还是显示选择放松运动界面
+     *
+     * @param needShowMain true：显示放松选择界面
+     *                     false：显示倒计时界面
+     */
     private void updateUI(boolean needShowMain) {
         if (needShowMain) {
             rvSelectRelaxItem.setVisibility(View.VISIBLE);
@@ -163,12 +190,27 @@ public class RelaxMainFragment extends BaseFragment {
         int messageCode = messageEvent.getMessageCode();
         switch (messageCode) {
             case MessageCode.CODE_UPDEATE_RELAX_ITEM:
+                //更新数据库数据通知到达后，更新主界面的数据
                 List<SportRelaxModel> all = mSportRelaxDaoManager.getAll();
-                Log.d(TAG, "OnMessageEvent: all==>"+all);
+                selectionSportBeans.clear();
+                Stream.of(all).forEach(sportRelaxModel -> {
+                    selectionSportBeans.add(new SportRelaxBean(sportRelaxModel.getSetSportTime(), sportRelaxModel.getSprotName(), sportRelaxModel.getShowSubIncrease()));
+                });
+                Log.d(TAG, "OnMessageEvent: all==>" + all);
                 break;
             default:
                 break;
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //界面销毁时取消计时器
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
     }
 }

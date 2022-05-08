@@ -8,7 +8,6 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -56,24 +55,33 @@ public class SportRelaxActivity extends BaseActivity {
         mSportRelaxContainerPagerAdapter = new SportRelaxContainerPagerAdapter(this, mFragmentList);
         vpRelax.setAdapter(mSportRelaxContainerPagerAdapter);
         vpRelax.setCurrentItem(0);
+        //禁止ViewPager滑动
+        vpRelax.setUserInputEnabled(false);
+
         vpRelax.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected: position==>"+position);
+                Log.d(TAG, "onPageSelected: position==>" + position);
                 super.onPageSelected(position);
                 updateSelectNav(position);
             }
         });
-        mRelaxNavigationAdapter=new RelaxNavigationAdapter(mContext,mRelaxMenuBeans);
+        mRelaxNavigationAdapter = new RelaxNavigationAdapter(mContext, mRelaxMenuBeans);
         mRelaxNavigationAdapter.setOnItemClick((position, view) -> {
             vpRelax.setCurrentItem(position);
             updateSelectNav(position);
         });
         rvNavigation.setAdapter(mRelaxNavigationAdapter);
-        rvNavigation.setLayoutManager(new GridLayoutManager(mContext,2));
+        rvNavigation.setLayoutManager(new GridLayoutManager(mContext, 2));
 
     }
 
+    /**
+     * 底部导航栏选择更新
+     * 放松、设置
+     *
+     * @param position
+     */
     private void updateSelectNav(int position) {
         Stream.of(mRelaxMenuBeans).forEach(relaxMenuBean -> relaxMenuBean.setSelected(false));
         mRelaxMenuBeans.get(position).setSelected(true);
@@ -84,11 +92,16 @@ public class SportRelaxActivity extends BaseActivity {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(new RelaxMainFragment());
         mFragmentList.add(new RelaxSettingFragment());
-        mRelaxMenuBeans=new ArrayList<>();
-        mRelaxMenuBeans.add(new RelaxMenuBean("放松",R.mipmap.icon_sport_relax,true));
-        mRelaxMenuBeans.add(new RelaxMenuBean("设置",R.mipmap.icon_sport_relax));
+        mRelaxMenuBeans = new ArrayList<>();
+        mRelaxMenuBeans.add(new RelaxMenuBean("放松", R.mipmap.icon_sport_relax, true));
+        mRelaxMenuBeans.add(new RelaxMenuBean("设置", R.mipmap.icon_sport_relax));
     }
 
+    /**
+     * 跳转到运动放松界面，既该界面
+     *
+     * @param context
+     */
     public static void startSportRelaxActivity(Context context) {
         Intent intent = new Intent(context, SportRelaxActivity.class);
         context.startActivity(intent);

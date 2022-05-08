@@ -33,7 +33,7 @@ public class SportRelaxDaoManager {
 
     public boolean insertSportRelax(SportRelaxModel sportRelaxModel) {
         try {
-            List<SportRelaxModel> modelByRelaxName = getModelByRelaxName(sportRelaxModel.sprotName);
+            List<SportRelaxModel> modelByRelaxName = getModelByRelaxName(sportRelaxModel.sprotName,sportRelaxModel.initsprotTime);
             if (modelByRelaxName == null || modelByRelaxName.isEmpty()) {
                 mSportRelaxModelDao.insertOrReplace(sportRelaxModel);
                 return true;
@@ -79,10 +79,10 @@ public class SportRelaxDaoManager {
         return sportRelaxModels == null || sportRelaxModels.isEmpty() ? null : sportRelaxModels.get(0);
     }
 
-    public List<SportRelaxModel> getModelByRelaxName(String sportName) {
+    public List<SportRelaxModel> getModelByRelaxName(String sportName,long actionTime) {
         try {
             QueryBuilder<SportRelaxModel> qb = mSportRelaxModelDao.queryBuilder();
-            qb.where(SportRelaxModelDao.Properties.SprotName.eq(sportName));
+            qb.where(SportRelaxModelDao.Properties.SprotName.eq(sportName),SportRelaxModelDao.Properties.InitsprotTime.eq(actionTime));
             List<SportRelaxModel> list = qb.list();
             return list;
         }catch (Exception e){
@@ -95,7 +95,18 @@ public class SportRelaxDaoManager {
 
     public boolean deleteByName(String name) {
         try {
-            DeleteQuery<SportRelaxModel> sportRelaxModelDeleteQuery = mSportRelaxModelDao.queryBuilder().buildDelete();
+            DeleteQuery<SportRelaxModel> sportRelaxModelDeleteQuery = mSportRelaxModelDao.queryBuilder().where(SportRelaxModelDao.Properties.SprotName.eq(name)).buildDelete();
+            sportRelaxModelDeleteQuery.executeDeleteWithoutDetachingEntities();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "deleteByName: msg==>" + e.getMessage(), e);
+        }
+        return false;
+    }
+    public boolean deleteByNameAndTime(String name,long time) {
+        try {
+            DeleteQuery<SportRelaxModel> sportRelaxModelDeleteQuery = mSportRelaxModelDao.queryBuilder().where(SportRelaxModelDao.Properties.SprotName.eq(name)).buildDelete();
             sportRelaxModelDeleteQuery.executeDeleteWithoutDetachingEntities();
             return true;
         } catch (Exception e) {

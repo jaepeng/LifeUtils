@@ -1,6 +1,7 @@
 package cn.newhit.timingcalculation.widget.popup;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,10 +21,14 @@ public class InputPopup extends CenterPopupView {
     EditText etActionTime;
     TextView tvConfirm;
     private SetBuilder mSetBuilder;
+    private Context mContext;
+    private Handler mHandler;
 
     public InputPopup(@NonNull @NotNull Context context, SetBuilder setBuilder) {
         super(context);
+        mContext = context;
         this.mSetBuilder = setBuilder;
+        mHandler = new Handler(mContext.getMainLooper());
     }
 
     @Override
@@ -31,6 +36,15 @@ public class InputPopup extends CenterPopupView {
         super.onCreate();
         initView();
         initListener();
+    }
+
+    public void clearActionText() {
+        if (etActionTime != null) {
+            etActionTime.setText("");
+        }
+        if (etActionName != null) {
+            etActionName.setText("");
+        }
     }
 
     private void initListener() {
@@ -47,6 +61,7 @@ public class InputPopup extends CenterPopupView {
                     return;
                 }
                 dismiss();
+                clearActionText();
                 mSetBuilder.mConfirm.onClickConfirm(actionName, Long.parseLong(actionTime));
             }
         });
@@ -62,6 +77,31 @@ public class InputPopup extends CenterPopupView {
     @Override
     protected int getImplLayoutId() {
         return R.layout.layout_popup_input_popup;
+    }
+
+    public void setActionName(String actionName) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (etActionName != null) {
+                    etActionName.setText(actionName);
+                }
+            }
+        });
+
+    }
+
+    public void setActionTime(String actionTime) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (etActionTime != null) {
+                    etActionTime.setText(actionTime);
+                    etActionTime.setSelection(actionTime.length());
+                }
+            }
+        });
+
     }
 
     //对按钮的字体进行设置
@@ -105,6 +145,12 @@ public class InputPopup extends CenterPopupView {
             return (InputPopup) builder.asCustom(new InputPopup(mContext, this));
         }
 
+    }
+
+    public void setOnClickConfirm(OnClickConfirm onClickConfirm) {
+        if (mSetBuilder != null) {
+            mSetBuilder.setBtnConfirm(onClickConfirm);
+        }
     }
 
     public interface OnClickConfirm {

@@ -13,6 +13,7 @@ public class SportRelaxBean {
     //放松的名称
     String releaxName;
     TimeUnit mTimeUnit= TimeUnit.SECOND;
+    //是否显示加减符号
     boolean showSubIncrease=true;
 
     public SportRelaxBean(long relaxTime, String releaxName, boolean showSubIncrease) {
