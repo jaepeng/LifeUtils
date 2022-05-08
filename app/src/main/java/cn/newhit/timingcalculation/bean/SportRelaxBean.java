@@ -74,4 +74,15 @@ public class SportRelaxBean {
         }
         increaseTime(-subTime);
     }
+
+    @Override
+    public String toString() {
+        return "SportRelaxBean{" +
+                "localIconId=" + localIconId +
+                ", relaxTime=" + relaxTime +
+                ", releaxName='" + releaxName + '\'' +
+                ", mTimeUnit=" + mTimeUnit +
+                ", showSubIncrease=" + showSubIncrease +
+                '}';
+    }
 }

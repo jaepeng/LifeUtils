@@ -76,17 +76,28 @@ public class RelaxMainFragment extends BaseFragment {
         mHandler = new Handler(getMainLooper());
         selectedSportBeans = new ArrayList<>();
         selectionSportBeans = new ArrayList<>();
-        selectionSportBeans.add(new SportRelaxBean(25, "左腿", false));
-        selectionSportBeans.add(new SportRelaxBean(15, "左手", false));
-        selectionSportBeans.add(new SportRelaxBean(25, "右腿", false));
-        selectionSportBeans.add(new SportRelaxBean(15, "右手", false));
-        selectionSportBeans.add(new SportRelaxBean(5, "间隔", false));
+        List<SportRelaxModel> all = mSportRelaxDaoManager.getAll();
+        Stream.of(all).forEach(sportRelaxModel -> {
+            selectionSportBeans.add(new SportRelaxBean(
+                    sportRelaxModel.getSetSportTime(),
+                    sportRelaxModel.getSprotName(),
+                    sportRelaxModel.getShowSubIncrease()));
+        });
         // TODO: 2022/3/1 使用数据库存储设置中的自定义放松数据，并且在这个时候进行添加以及删除
         mRelaxTimeSelectionAdapter = new RelaxTimeSelectionAdapter(mContext, selectionSportBeans);
-        mRelaxTimeSelectionAdapter.setOnItemClickListener((position, view) -> {
-            SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
-            selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), true));
-            mRelaxSelectedAdapter.notifyDataSetChanged();
+        mRelaxTimeSelectionAdapter.setOnItemClickListener(new RelaxTimeSelectionAdapter.OnItemClick() {
+            @Override
+            public void onItemClick(int position, View view) {
+                SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
+                selectedSportBeans.add(new SportRelaxBean(sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), true));
+                mRelaxSelectedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemTimeChange(int position, long realTime, View view) {
+                SportRelaxBean sportRelaxBean = selectionSportBeans.get(position);
+                getAndUpdateBean(sportRelaxBean.getReleaxName(), sportRelaxBean.getRelaxTime(), sportRelaxBean.getReleaxName(), realTime);
+            }
         });
         mRelaxSelectedAdapter = new RelaxSelectedAdapter(mContext, selectedSportBeans);
         mOnItemLongClick = (position, view) -> {
@@ -194,14 +205,38 @@ public class RelaxMainFragment extends BaseFragment {
                 List<SportRelaxModel> all = mSportRelaxDaoManager.getAll();
                 selectionSportBeans.clear();
                 Stream.of(all).forEach(sportRelaxModel -> {
-                    selectionSportBeans.add(new SportRelaxBean(sportRelaxModel.getSetSportTime(), sportRelaxModel.getSprotName(), sportRelaxModel.getShowSubIncrease()));
+                    selectionSportBeans.add(new SportRelaxBean(
+                            sportRelaxModel.getSetSportTime(),
+                            sportRelaxModel.getSprotName(),
+                            sportRelaxModel.getShowSubIncrease()));
                 });
-                Log.d(TAG, "OnMessageEvent: all==>" + all);
+                mRelaxTimeSelectionAdapter.notifyDataSetChanged();
+                Log.d(TAG, "OnMessageEvent: all==>" + all.size());
                 break;
             default:
                 break;
         }
 
+    }
+
+    /**
+     * 根据旧的数据获取到数据库中数据后进行更新
+     *
+     * @param oldName
+     * @param oldNewTime
+     * @param newName
+     * @param newTime
+     */
+    private void getAndUpdateBean(String oldName, long oldNewTime, String newName, long newTime) {
+        List<SportRelaxModel> modelByRelaxName = mSportRelaxDaoManager.getModelByRelaxName(oldName, oldNewTime);
+        if (modelByRelaxName != null && !modelByRelaxName.isEmpty()) {
+            Stream.of(modelByRelaxName).forEach(sportRelaxModel -> {
+                sportRelaxModel.setSprotName(newName);
+                sportRelaxModel.setInitsprotTime(newTime);
+                sportRelaxModel.setSetSportTime(newTime);
+                mSportRelaxDaoManager.updateSportRelax(sportRelaxModel);
+            });
+        }
     }
 
     @Override

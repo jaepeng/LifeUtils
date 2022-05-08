@@ -10,6 +10,7 @@ import com.lxj.xpopup.impl.CenterListPopupView;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import cn.newhit.timingcalculation.greendao.SportRelaxDaoManager;
 import cn.newhit.timingcalculation.greendao.SportRelaxModel;
 import cn.newhit.timingcalculation.message.MessageEvent;
 import cn.newhit.timingcalculation.widget.popup.InputPopup;
+import cn.newhit.timingcalculation.widget.popup.StandardNormalPopup;
 
 /**
  * 放松运动设置界面
@@ -35,10 +37,10 @@ public class RelaxSettingFragment extends BaseFragment {
     TextView tvUpdate;
     @BindView(R.id.tv_delete)
     TextView tvDelete;
-    private SportRelaxModel mSportRelaxModel;
     private SportRelaxDaoManager mSportRelaxDaoManager;
     private InputPopup mInputPopup;
     private CenterListPopupView mCenterListPopupView;
+    private StandardNormalPopup mDeletePopup;
 
     @Override
     protected int getLayoutId() {
@@ -52,10 +54,6 @@ public class RelaxSettingFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        mSportRelaxModel = new SportRelaxModel();
-        mSportRelaxModel.setInitsprotTime(15);
-        mSportRelaxModel.setSprotName("颈椎");
-        mSportRelaxModel.setShowSubIncrease(true);
     }
 
     @OnClick({R.id.tv_delete, R.id.tv_update, R.id.tv_add})
@@ -66,8 +64,21 @@ public class RelaxSettingFragment extends BaseFragment {
                 break;
             case R.id.tv_delete:
                 showSportListPopup((position, text) -> {
-                    // TODO: 2022/3/4 标准弹窗进行提示，是否确认删除
-                    deleteBean(text.substring(0, text.indexOf("（")));
+                    if (mDeletePopup == null) {
+                        mDeletePopup = new StandardNormalPopup.SetBuilder(mContext)
+                                .setMessage("是否删除" + text.substring(0, text.indexOf("（")))
+                                .setTitle("删除指定运动?")
+                                .setBtnConfirm("确定", () -> {
+                                    deleteBean(text.substring(0, text.indexOf("（")));
+                                    mCenterListPopupView.dismiss();
+                                })
+                                .setBtnCancel("取消", null)
+                                .build();
+                    }
+                    if (!mDeletePopup.isShow()) {
+                        mDeletePopup.setMessage("是否删除" + text.substring(0, text.indexOf("（")));
+                        mDeletePopup.show();
+                    }
                 });
                 getAllBean();
                 break;
@@ -75,7 +86,7 @@ public class RelaxSettingFragment extends BaseFragment {
                 showSportListPopup((position, text) -> {
                     showInputPopup();
                     String oldActionName = text.substring(0, text.indexOf("（"));
-                    String oldActionTime = text.substring(text.indexOf("（")+1, text.indexOf("）")-1);
+                    String oldActionTime = text.substring(text.indexOf("（") + 1, text.indexOf("）") - 1);
                     mInputPopup.setActionName(oldActionName);
                     mInputPopup.setActionTime(oldActionTime);
                     mInputPopup.setOnClickConfirm((actionName, actionTime) -> {
@@ -92,44 +103,60 @@ public class RelaxSettingFragment extends BaseFragment {
 
     }
 
+    /**
+     * 显示所有放松项目
+     *
+     * @param onSelectListener
+     */
     private void showSportListPopup(OnSelectListener onSelectListener) {
-        List<SportRelaxModel> allSport = mSportRelaxDaoManager.getAll();
-        String[] strSportName = new String[allSport.size()];
+        String[] strSportNames = getLocalSportData(mSportRelaxDaoManager.getAll());
+        mCenterListPopupView = new XPopup.Builder(mContext)
+                .maxHeight(800)
+                .autoDismiss(false)
+                .asCenterList("所有活动如下", strSportNames, onSelectListener);
+        mCenterListPopupView.show();
+    }
+
+    /**
+     * 获取本地全部运动数据并返回一个String[]便于操作
+     *
+     * @param allSport
+     * @return
+     */
+    @NotNull
+    private String[] getLocalSportData(List<SportRelaxModel> allSport) {
         List<String> stringLis = new ArrayList<>();
         Stream.of(allSport).forEach(sportRelaxModel -> {
             stringLis.add(sportRelaxModel.getSprotName() + "（" + sportRelaxModel.getInitsprotTime() + "秒）");
         });
-        stringLis.toArray(strSportName);
-        mCenterListPopupView = new XPopup.Builder(mContext)
-                .maxHeight(800)
-                .autoDismiss(false)
-                .asCenterList("所有活动如下", strSportName, onSelectListener);
-        mCenterListPopupView.show();
+        return stringLis.toArray(new String[]{});
     }
 
 
+    /**
+     * 显示运动输入框
+     */
     private void showInputPopup() {
-        if (mInputPopup != null) {
-            mInputPopup.show();
-        } else {
-            mInputPopup = new InputPopup.SetBuilder(mContext)
-                    .setBackPressdCancelable(true)
-                    .setTouchOutsideCancelable(true)
-                    .setBtnConfirm((actionName, actionTime) -> {
-                        SportRelaxModel sportRelaxModel = new SportRelaxModel();
-                        sportRelaxModel.setInitsprotTime(actionTime);
-                        sportRelaxModel.setSprotName(actionName);
-                        sportRelaxModel.setShowSubIncrease(true);
-                        mSportRelaxDaoManager.insertSportRelax(sportRelaxModel);
-                        EventBus.getDefault().post(new MessageEvent(MessageCode.CODE_UPDEATE_RELAX_ITEM, null));
-                    })
-                    .build();
-            mInputPopup.show();
-        }
+        mInputPopup = new InputPopup.SetBuilder(mContext)
+                .setBackPressdCancelable(true)
+                .setTouchOutsideCancelable(true)
+                .setBtnConfirm((actionName, actionTime) -> {
+                    SportRelaxModel sportRelaxModel = new SportRelaxModel();
+                    sportRelaxModel.setInitsprotTime(actionTime);
+                    sportRelaxModel.setSetSportTime(actionTime);
+                    sportRelaxModel.setSprotName(actionName);
+                    sportRelaxModel.setShowSubIncrease(true);
+                    mSportRelaxDaoManager.insertSportRelax(sportRelaxModel);
+                    EventBus.getDefault().post(new MessageEvent(MessageCode.CODE_UPDEATE_RELAX_ITEM, null));
+                })
+                .build();
+        mInputPopup.show();
+
     }
 
     /**
      * 根据名称删除对应的
+     *
      * @param name
      */
     private void deleteBean(String name) {
@@ -139,6 +166,7 @@ public class RelaxSettingFragment extends BaseFragment {
 
     /**
      * 根据旧的数据获取到数据库中数据后进行更新
+     *
      * @param oldName
      * @param oldNewTime
      * @param newName
@@ -150,9 +178,11 @@ public class RelaxSettingFragment extends BaseFragment {
             Stream.of(modelByRelaxName).forEach(sportRelaxModel -> {
                 sportRelaxModel.setSprotName(newName);
                 sportRelaxModel.setInitsprotTime(newTime);
+                sportRelaxModel.setSetSportTime(newTime);
                 mSportRelaxDaoManager.updateSportRelax(sportRelaxModel);
             });
         }
+        EventBus.getDefault().post(new MessageEvent(MessageCode.CODE_UPDEATE_RELAX_ITEM, null));
     }
 
     /**

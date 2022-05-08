@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import cn.newhit.timingcalculation.bean.SportRelaxBean;
 import cn.newhit.timingcalculation.constants.TimeUnit;
 
 public class SportRelaxSelactionView extends ConstraintLayout {
+    private static final String TAG = "SportRelaxSelactionView";
 
     private boolean mShowSubOrIncrease;
     private TextView mSubTime;
@@ -121,6 +123,7 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     }
 
     public void setSportData(SportRelaxBean sportData) {
+        Log.d(TAG, "setSportData: sportDataString==>"+sportData.toString());
         mSportRelaxBean = sportData;
         mRelaxName.setText(mSportRelaxBean.getReleaxName());
         mRelaxTime = mSportRelaxBean.getRelaxTime();

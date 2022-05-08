@@ -56,6 +56,9 @@ public class RelaxTimeSelectionAdapter extends RecyclerView.Adapter<RelaxTimeSel
 
     public interface OnItemClick {
         void onItemClick(int position, View view);
+
+        void onItemTimeChange(int position, long realTime, View view);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,12 +71,17 @@ public class RelaxTimeSelectionAdapter extends RecyclerView.Adapter<RelaxTimeSel
             mSportRelaxSelactionView.setOnItemClickListener(new SportRelaxSelactionView.OnItemClickListener() {
                 @Override
                 public void onSubTimeClick(long realTime, View view) {
-                    Log.d(TAG, "onSubTimeClick: realTime==>" + realTime);
+                    if (mOnItemClick != null) {
+                        mOnItemClick.onItemTimeChange(getLayoutPosition(), realTime, view);
+                    }
                 }
 
                 @Override
                 public void onIncreaseClick(long realTime, View view) {
                     Log.d(TAG, "onIncreaseClick: realTime==>" + realTime);
+                    if (mOnItemClick != null) {
+                        mOnItemClick.onItemTimeChange(getLayoutPosition(), realTime, view);
+                    }
                 }
 
                 @Override
