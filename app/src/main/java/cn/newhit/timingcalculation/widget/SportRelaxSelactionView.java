@@ -123,7 +123,7 @@ public class SportRelaxSelactionView extends ConstraintLayout {
     }
 
     public void setSportData(SportRelaxBean sportData) {
-        Log.d(TAG, "setSportData: sportDataString==>"+sportData.toString());
+        Log.d(TAG, "setSportData: sportDataString==>" + sportData.toString());
         mSportRelaxBean = sportData;
         mRelaxName.setText(mSportRelaxBean.getReleaxName());
         mRelaxTime = mSportRelaxBean.getRelaxTime();
